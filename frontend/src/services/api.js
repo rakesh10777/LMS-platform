@@ -2,6 +2,7 @@ const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const handleResponse = async (response) => {
     const text = await response.text();
+    console.log('API Response:', response.url, response.status, text.substring(0, 100));
     try {
         const data = JSON.parse(text);
         if (!response.ok) {
@@ -10,9 +11,9 @@ const handleResponse = async (response) => {
         return data;
     } catch (e) {
         if (text.includes('<!DOCTYPE') || text.includes('<html')) {
-            throw new Error('Server error - please try again later');
+            throw new Error('Backend not running. Start server with: cd backend && node server.js');
         }
-        throw new Error(e.message || 'Invalid response');
+        throw new Error(e.message || text.substring(0, 50));
     }
 };
 
